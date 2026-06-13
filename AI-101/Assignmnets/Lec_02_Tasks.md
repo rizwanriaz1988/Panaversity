@@ -20,7 +20,7 @@ Sometimes the AI gave answers that were too long, general, or not correct. I sol
 
 ## Task 2 — AI Generated Snake Game
 
-## Deployed Game/Application Link
+### Deployed Game/Application Link
 
 https://snake-game-webapp-liart.vercel.app/
 
@@ -48,7 +48,7 @@ The main challenge was managing many connected game rules at the same time. The 
 
 ## Task 3 — Lecture Slide Generation Using LLMs
 
-## Slides Link
+### Slides Link
 
 https://docs.google.com/presentation/d/1yyz1XIne5oA0xRKDqeuIYI_G2E0QQEx_/edit?usp=sharing&ouid=111687963112782378446&rtpof=true&sd=true
 
