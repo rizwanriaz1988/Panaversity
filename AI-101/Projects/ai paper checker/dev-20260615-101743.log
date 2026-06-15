@@ -1,0 +1,84 @@
+
+> paper-checker@0.1.0 dev
+> next dev --hostname 127.0.0.1 --port 3000
+
+   ▲ Next.js 15.5.19
+   - Local:        http://127.0.0.1:3000
+   - Network:      http://127.0.0.1:3000
+   - Environments: .env
+
+ ✓ Starting...
+ ✓ Ready in 12s
+ ○ Compiling / ...
+ ✓ Compiled / in 56.4s (2014 modules)
+ ✓ Compiled in 6.3s (932 modules)
+ GET / 200 in 903ms
+ ✓ Compiled in 1861ms (932 modules)
+ GET / 200 in 899ms
+ GET / 200 in 1739ms
+ GET / 200 in 1302ms
+ GET / 200 in 1087ms
+ GET / 200 in 190ms
+ GET / 200 in 692ms
+ ○ Compiling /api/grade ...
+ ✓ Compiled /api/grade in 6.3s (2528 modules)
+ GET / 200 in 1155ms
+ ✓ Compiled in 1331ms (933 modules)
+ GET / 200 in 75ms
+ POST /api/grade 200 in 16785ms
+ GET / 200 in 4881ms
+ POST /api/grade 200 in 5340ms
+ POST /api/grade 200 in 55623ms
+ ✓ Compiled in 4.4s (2015 modules)
+ GET / 200 in 337ms
+ ✓ Compiled in 2.2s (2015 modules)
+ GET / 200 in 591ms
+ ✓ Compiled in 1061ms (2015 modules)
+ GET / 200 in 323ms
+ GET / 200 in 631ms
+ GET / 200 in 193ms
+ ✓ Compiled in 1593ms (933 modules)
+ GET / 200 in 106ms
+ GET / 200 in 197ms
+   Reload env: .env
+ ✓ Compiled in 953ms (2001 modules)
+ GET / 200 in 197ms
+   Reload env: .env
+ ✓ Compiled in 609ms (2001 modules)
+ GET / 200 in 194ms
+   Reload env: .env
+ ✓ Compiled in 451ms (2001 modules)
+ GET / 200 in 94ms
+   Reload env: .env
+ ✓ Compiled in 332ms (2001 modules)
+ GET / 200 in 97ms
+   Reload env: .env
+ ✓ Compiled in 323ms (2001 modules)
+ GET / 200 in 115ms
+   Reload env: .env
+ ✓ Compiled in 771ms (2001 modules)
+   Reload env: .env
+ ✓ Compiled in 528ms (2001 modules)
+ GET / 200 in 117ms
+ GET / 200 in 38ms
+   Reload env: .env
+ ✓ Compiled in 609ms (2001 modules)
+ GET / 200 in 81ms
+   Reload env: .env
+ ✓ Compiled in 421ms (2001 modules)
+ GET / 200 in 82ms
+   Reload env: .env
+ ✓ Compiled in 898ms (2001 modules)
+ GET / 200 in 175ms
+   Reload env: .env
+ ✓ Compiled in 398ms (2001 modules)
+ GET / 200 in 111ms
+   Reload env: .env
+ ✓ Compiled in 486ms (2001 modules)
+ GET / 200 in 147ms
+   Reload env: .env
+ ✓ Compiled in 236ms (2001 modules)
+ GET / 200 in 82ms
+   Reload env: .env
+ ✓ Compiled in 568ms (2001 modules)
+ GET / 200 in 101ms

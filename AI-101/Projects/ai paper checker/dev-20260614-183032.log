@@ -1,0 +1,29 @@
+
+> paper-checker@0.1.0 dev
+> next dev --hostname 127.0.0.1 --port 3000
+
+   ▲ Next.js 15.5.19
+   - Local:        http://127.0.0.1:3000
+   - Network:      http://127.0.0.1:3000
+
+ ✓ Starting...
+ ✓ Ready in 20.6s
+ ○ Compiling / ...
+ ✓ Compiled / in 28.3s (1542 modules)
+ GET / 200 in 4341ms
+ ✓ Compiled in 439ms (730 modules)
+ GET / 200 in 241ms
+   Reload env: .env
+ ✓ Compiled in 895ms (1528 modules)
+ GET / 200 in 211ms
+ ✓ Compiled in 2.2s (1544 modules)
+ GET / 200 in 309ms
+ ○ Compiling /_error ...
+ ✓ Compiled /_error in 10.7s (1877 modules)
+ GET / 500 in 20867ms
+ GET / 500 in 20245ms
+ GET / 500 in 1317ms
+ GET / 500 in 2006ms
+ GET / 500 in 423ms
+ GET / 500 in 1647ms
+ GET / 500 in 411ms

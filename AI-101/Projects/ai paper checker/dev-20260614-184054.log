@@ -1,0 +1,57 @@
+
+> paper-checker@0.1.0 dev
+> next dev --hostname 127.0.0.1 --port 3000
+
+   ▲ Next.js 15.5.19
+   - Local:        http://127.0.0.1:3000
+   - Network:      http://127.0.0.1:3000
+   - Environments: .env
+
+ ✓ Starting...
+ ✓ Ready in 2.5s
+ ○ Compiling / ...
+ ✓ Compiled / in 9.3s (1544 modules)
+ GET / 200 in 10275ms
+ ✓ Compiled in 698ms (731 modules)
+ GET / 200 in 192ms
+ ○ Compiling /api/grade ...
+ ✓ Compiled /api/grade in 5.1s (2046 modules)
+ POST /api/grade 200 in 9543ms
+ POST /api/grade 200 in 245875ms
+ POST /api/grade 200 in 170565ms
+ POST /api/grade 200 in 258329ms
+   Reload env: .env
+ ✓ Compiled in 1236ms (1531 modules)
+ GET / 200 in 243ms
+   Reload env: .env
+ ✓ Compiled in 364ms (1531 modules)
+ GET / 200 in 127ms
+   Reload env: .env
+ ✓ Compiled in 261ms (1531 modules)
+ GET / 200 in 87ms
+   Reload env: .env
+ ✓ Compiled in 434ms (1531 modules)
+ GET / 200 in 210ms
+ GET / 200 in 589ms
+ ○ Compiling /api/grade ...
+ ✓ Compiled /api/grade in 2.6s (1328 modules)
+ POST /api/grade 200 in 8434ms
+ ✓ Compiled in 1028ms (1531 modules)
+ ✓ Compiled in 5.2s (1545 modules)
+ GET / 200 in 270ms
+ ✓ Compiled in 953ms (1545 modules)
+ GET / 200 in 212ms
+ ✓ Compiled in 2s (1545 modules)
+ GET / 200 in 228ms
+ ✓ Compiled in 14.2s (2013 modules)
+ GET / 200 in 273ms
+ GET / 200 in 1882ms
+ GET / 200 in 1010ms
+ GET / 200 in 329ms
+ ○ Compiling /api/grade ...
+ ✓ Compiled /api/grade in 10.2s (1594 modules)
+ POST /api/grade 200 in 21704ms
+ ✓ Compiled in 14.9s (2015 modules)
+ GET / 200 in 2204ms
+ ✓ Compiled in 1994ms (933 modules)
+ GET / 200 in 163ms
