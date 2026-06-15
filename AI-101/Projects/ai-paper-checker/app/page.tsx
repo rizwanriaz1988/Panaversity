@@ -14,6 +14,7 @@ import {
   LoaderCircle,
   Moon,
   Plus,
+  Sparkles,
   Sun,
   Trash2,
   UploadCloud,
@@ -81,10 +82,86 @@ type StreamEvent =
   | { type: "done"; total: number }
   | { type: "fatal"; error: string };
 
+type TextStudentInput = {
+  name: string;
+  text: string;
+};
+
+type GradingRequestOptions = {
+  fileStudents?: StudentUpload[];
+  textStudents?: TextStudentInput[];
+  questionSourceMode?: SourceMode;
+  questionSourceFile?: File | null;
+  questionSourceText?: string;
+  rubricSourceMode?: SourceMode;
+  rubricSourceFile?: File | null;
+  rubricSourceText?: string;
+  instructionsSourceMode?: SourceMode;
+  instructionsText?: string;
+  instructionsFile?: File | null;
+};
+
 const acceptedStudentTypes = ".pdf,.docx,.png,.jpg,.jpeg,.txt";
 const acceptedSourceTypes = ".pdf,.docx,.png,.jpg,.jpeg,.txt";
 const acceptedInstructionsTypes = ".pdf";
 const collator = new Intl.Collator(undefined, { numeric: true, sensitivity: "base" });
+
+const sampleQuestionPaper = `Grade 9 Science: Water Cycle Short Test
+
+Answer all questions. Total marks: 20.
+
+Q1. Explain evaporation and condensation in the water cycle. (5 marks)
+Q2. Describe how clouds form and how they can lead to precipitation. (5 marks)
+Q3. A town removes many trees near a river. Predict two effects this could have on runoff or flooding, and explain your reasoning. (5 marks)
+Q4. Suggest two practical actions families or schools can take to conserve water. Explain why each action helps. (5 marks)`;
+
+const sampleRubric = `Rubric / model answers
+
+Q1 - 5 marks:
+- 2 marks: evaporation is liquid water changing to water vapor because of heat.
+- 2 marks: condensation is water vapor cooling and changing into liquid droplets.
+- 1 mark: clearly connects both processes to the water cycle.
+
+Q2 - 5 marks:
+- 2 marks: warm moist air rises and cools.
+- 2 marks: water vapor condenses on particles to form cloud droplets.
+- 1 mark: droplets combine, become heavy, and fall as rain, snow, or other precipitation.
+
+Q3 - 5 marks:
+- 2 marks: fewer roots/plants absorb and slow less water.
+- 2 marks: runoff increases and river flooding risk can rise.
+- 1 mark: explanation links tree removal to soil erosion, faster surface flow, or reduced infiltration.
+
+Q4 - 5 marks:
+- 2 marks: gives one realistic conservation action with explanation.
+- 2 marks: gives a second realistic conservation action with explanation.
+- 1 mark: answer is practical for families or schools.`;
+
+const sampleAdditionalInstructions =
+  "Award partial credit for correct ideas even when wording differs from the model answer. Flag blank or copied responses.";
+
+const sampleStudentPapers = [
+  {
+    name: "Ayesha Khan",
+    text: `Q1. Evaporation happens when the Sun heats water in rivers, lakes, or puddles and some of it becomes water vapor. Condensation happens when that vapor cools high in the air and changes back into tiny liquid drops. These two changes keep water moving through the water cycle.
+
+Q2. Warm wet air rises. As it rises it gets cooler, so water vapor condenses around dust and other tiny particles. Many droplets together make a cloud. When the droplets join and get heavy enough, they fall as precipitation such as rain.
+
+Q3. If trees are removed near a river, more rainwater will run quickly over the ground because roots are not holding soil and absorbing water. This can cause more erosion and can make the river rise faster, so flooding becomes more likely.
+
+Q4. Families can fix leaking taps because small leaks waste a lot of water over time. Schools can collect rainwater for gardens, which reduces the need to use clean tap water for plants.`,
+  },
+  {
+    name: "Bilal Ahmed",
+    text: `Q1. Evaporation is when water dries up in sunlight and goes into the air. Condensation is when water becomes cold and makes clouds.
+
+Q2. Clouds form from water vapor. The vapor goes up and later rain comes down. I am not sure about the particles.
+
+Q3. Cutting trees can make the place hotter. It may also make floods worse because there are not many trees to stop water, but I did not explain the river part clearly.
+
+Q4. People should turn off taps while brushing. Schools should tell students to save water.`,
+  },
+];
 
 function makeId() {
   return typeof crypto !== "undefined" && "randomUUID" in crypto
@@ -659,13 +736,72 @@ export default function Home() {
     : savedStudentTexts;
   const studentCount = students.length + activeStudentTexts.length;
 
-  const validate = () => {
-    if (!students.length && !activeStudentTexts.length) return "Add at least one student paper.";
-    if (questionMode === "upload" && !questionFile) return "Add a question paper file.";
-    if (questionMode === "text" && !questionText.trim()) return "Paste the question paper text.";
-    if (rubricMode === "upload" && !rubricFile) return "Add a rubric or model answer file.";
-    if (rubricMode === "text" && !rubricText.trim()) return "Paste the rubric or model answers.";
+  const getGradingSources = (options?: GradingRequestOptions) => ({
+    fileStudents: options?.fileStudents ?? students,
+    textStudents: options?.textStudents ?? activeStudentTexts,
+    questionSourceMode: options?.questionSourceMode ?? questionMode,
+    questionSourceFile: options?.questionSourceFile ?? questionFile,
+    questionSourceText: options?.questionSourceText ?? questionText,
+    rubricSourceMode: options?.rubricSourceMode ?? rubricMode,
+    rubricSourceFile: options?.rubricSourceFile ?? rubricFile,
+    rubricSourceText: options?.rubricSourceText ?? rubricText,
+    instructionsSourceMode: options?.instructionsSourceMode ?? additionalInstructionsMode,
+    instructionsText: options?.instructionsText ?? additionalInstructions,
+    instructionsFile: options?.instructionsFile ?? additionalInstructionsFile,
+  });
+
+  const validate = (options?: GradingRequestOptions) => {
+    const sources = getGradingSources(options);
+    if (!sources.fileStudents.length && !sources.textStudents.length) return "Add at least one student paper.";
+    if (sources.questionSourceMode === "upload" && !sources.questionSourceFile) return "Add a question paper file.";
+    if (sources.questionSourceMode === "text" && !sources.questionSourceText.trim()) return "Paste the question paper text.";
+    if (sources.rubricSourceMode === "upload" && !sources.rubricSourceFile) return "Add a rubric or model answer file.";
+    if (sources.rubricSourceMode === "text" && !sources.rubricSourceText.trim()) return "Paste the rubric or model answers.";
     return "";
+  };
+
+  const buildFormData = (options?: GradingRequestOptions) => {
+    const sources = getGradingSources(options);
+    const formData = new FormData();
+
+    sources.fileStudents.forEach((student) => formData.append("studentFiles", student.file));
+    formData.append(
+      "studentNames",
+      JSON.stringify(sources.fileStudents.map((student) => student.name.trim() || "Student")),
+    );
+    formData.append(
+      "studentTexts",
+      JSON.stringify(
+        sources.textStudents.map((student, index) => ({
+          studentName: student.name.trim() || `Pasted Student ${index + 1}`,
+          text: student.text,
+        })),
+      ),
+    );
+    formData.append("questionMode", sources.questionSourceMode);
+    formData.append("rubricMode", sources.rubricSourceMode);
+    formData.append(
+      "additionalInstructions",
+      sources.instructionsSourceMode === "text" ? sources.instructionsText : "",
+    );
+
+    if (sources.instructionsSourceMode === "upload" && sources.instructionsFile) {
+      formData.append("additionalInstructionsFile", sources.instructionsFile);
+    }
+
+    if (sources.questionSourceMode === "upload" && sources.questionSourceFile) {
+      formData.append("questionFile", sources.questionSourceFile);
+    } else {
+      formData.append("questionText", sources.questionSourceText);
+    }
+
+    if (sources.rubricSourceMode === "upload" && sources.rubricSourceFile) {
+      formData.append("rubricFile", sources.rubricSourceFile);
+    } else {
+      formData.append("rubricText", sources.rubricSourceText);
+    }
+
+    return formData;
   };
 
   const handleStreamEvent = (event: StreamEvent) => {
@@ -704,51 +840,11 @@ export default function Home() {
     }
   };
 
-  const gradePapers = async () => {
-    const validationError = validate();
-    if (validationError) {
-      setError(validationError);
-      return;
-    }
-
+  const submitGradingRequest = async (formData: FormData) => {
     setError("");
     setOutcomes([]);
     setProgress("");
     setIsGrading(true);
-
-    const formData = new FormData();
-    students.forEach((student) => formData.append("studentFiles", student.file));
-    formData.append("studentNames", JSON.stringify(students.map((student) => student.name.trim() || "Student")));
-    formData.append(
-      "studentTexts",
-      JSON.stringify(
-        activeStudentTexts.map((student, index) => ({
-          studentName: student.name.trim() || `Pasted Student ${index + 1}`,
-          text: student.text,
-        })),
-      ),
-    );
-    formData.append("questionMode", questionMode);
-    formData.append("rubricMode", rubricMode);
-    formData.append(
-      "additionalInstructions",
-      additionalInstructionsMode === "text" ? additionalInstructions : "",
-    );
-    if (additionalInstructionsMode === "upload" && additionalInstructionsFile) {
-      formData.append("additionalInstructionsFile", additionalInstructionsFile);
-    }
-
-    if (questionMode === "upload" && questionFile) {
-      formData.append("questionFile", questionFile);
-    } else {
-      formData.append("questionText", questionText);
-    }
-
-    if (rubricMode === "upload" && rubricFile) {
-      formData.append("rubricFile", rubricFile);
-    } else {
-      formData.append("rubricText", rubricText);
-    }
 
     try {
       const response = await fetch("/api/grade", {
@@ -791,6 +887,55 @@ export default function Home() {
     } finally {
       setIsGrading(false);
     }
+  };
+
+  const gradePapers = async () => {
+    const validationError = validate();
+    if (validationError) {
+      setError(validationError);
+      return;
+    }
+
+    await submitGradingRequest(buildFormData());
+  };
+
+  const gradeSamplePapers = async () => {
+    const sampleTextStudents = sampleStudentPapers.map((student) => ({
+      id: makeId(),
+      name: student.name,
+      text: student.text,
+    }));
+    const sampleRequest: GradingRequestOptions = {
+      fileStudents: [],
+      textStudents: sampleStudentPapers,
+      questionSourceMode: "text",
+      questionSourceFile: null,
+      questionSourceText: sampleQuestionPaper,
+      rubricSourceMode: "text",
+      rubricSourceFile: null,
+      rubricSourceText: sampleRubric,
+      instructionsSourceMode: "text",
+      instructionsText: sampleAdditionalInstructions,
+      instructionsFile: null,
+    };
+
+    setStudents([]);
+    setStudentMode("text");
+    setStudentTexts(sampleTextStudents);
+    setStudentTextName("");
+    setStudentTextDraft("");
+    setExpandedStudentTextIds(new Set());
+    setQuestionMode("text");
+    setQuestionFile(null);
+    setQuestionText(sampleQuestionPaper);
+    setRubricMode("text");
+    setRubricFile(null);
+    setRubricText(sampleRubric);
+    setAdditionalInstructionsMode("text");
+    setAdditionalInstructions(sampleAdditionalInstructions);
+    setAdditionalInstructionsFile(null);
+
+    await submitGradingRequest(buildFormData(sampleRequest));
   };
 
   const exportCsv = () => {
@@ -1266,6 +1411,15 @@ export default function Home() {
               >
                 {isGrading ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <GraduationCap className="h-4 w-4" />}
                 Grade Papers
+              </button>
+              <button
+                type="button"
+                onClick={gradeSamplePapers}
+                disabled={isGrading}
+                className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-lg border border-sky-300 bg-sky-50 px-4 py-3 text-sm font-semibold text-sky-900 transition hover:bg-sky-100 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2 focus:ring-offset-white disabled:cursor-not-allowed disabled:border-zinc-300 disabled:bg-zinc-100 disabled:text-zinc-400 dark:border-sky-800 dark:bg-sky-950 dark:text-sky-100 dark:hover:bg-sky-900 dark:focus:ring-offset-zinc-900 dark:disabled:border-zinc-700 dark:disabled:bg-zinc-900 dark:disabled:text-zinc-500"
+              >
+                <Sparkles className="h-4 w-4" aria-hidden="true" />
+                Try sample report
               </button>
               {progress ? (
                 <p className="mt-3 rounded-lg border border-sky-300 bg-sky-50 px-3 py-2 text-sm text-sky-900 dark:border-sky-800 dark:bg-sky-950 dark:text-sky-100">
