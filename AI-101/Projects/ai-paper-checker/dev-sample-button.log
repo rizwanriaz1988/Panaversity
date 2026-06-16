@@ -13,3 +13,8 @@
  ✓ Compiled / in 13.3s (2016 modules)
  GET / 200 in 14857ms
  ✓ Compiled in 1729ms (933 modules)
+ GET / 200 in 166ms
+ ○ Compiling /api/grade ...
+ ✓ Compiled /api/grade in 6.1s (2516 modules)
+ POST /api/grade 200 in 32677ms
+ POST /api/grade 200 in 18026ms
