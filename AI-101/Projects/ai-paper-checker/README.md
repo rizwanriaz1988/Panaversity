@@ -12,14 +12,14 @@ Paper Checker is a Next.js app that uses Gemini to grade student papers with a q
 - Keep grading other students if one paper fails.
 - View marks, strengths, improvements, and flags for each student.
 - Download reports as PDF or CSV.
-- Use **Try sample report** to test the app without preparing files.
+- Use **View sample report** to test the app without preparing files or using a Gemini API key.
 - Switch between dark and light mode.
 
 ## Requirements
 
 - Node.js 20 or newer.
 - npm.
-- Gemini API key.
+- Gemini API key for real AI grading. The sample report works without one.
 
 ## Quick Start
 
@@ -29,7 +29,9 @@ Open this project folder in a terminal, then install dependencies:
 npm install
 ```
 
-Create your local environment file by copying the example file:
+If you only want to view the built-in sample report, you can skip the API key setup and start the app.
+
+For real AI grading, create your local environment file by copying the example file:
 
 ```bash
 cp .env.example .env
@@ -71,7 +73,7 @@ http://localhost:3000
 6. Review the student results and class summary.
 7. Click **Download PDF** or **Export as CSV** after grading.
 
-For a quick demo, click **Try sample report**. It loads sample data and runs the normal report flow.
+For a quick demo, click **View sample report**. It loads sample data and prebuilt results in the browser, so it does not call Gemini and does not use API credits.
 
 ## Supported Files
 
@@ -129,7 +131,7 @@ Keep `.env` private. Do not commit real API keys.
 
 ## Important Files
 
-- `app/page.tsx` - Main app UI, sample report button, results, PDF export, and CSV export.
+- `app/page.tsx` - Main app UI, local sample report button, results, PDF export, and CSV export.
 - `app/api/grade/route.ts` - Server-side grading API that calls Gemini.
 - `app/layout.tsx` - App metadata and theme setup.
 - `app/globals.css` - Global styles.
@@ -143,4 +145,4 @@ Keep `.env` private. Do not commit real API keys.
 - If you see `GEMINI_API_KEY is not configured`, check `.env` and restart the dev server.
 - If a file upload does not work, try pasting the same content as text.
 - If port `3000` is busy, Next.js may choose another port. Use the URL shown in the terminal.
-- If you only want to test the app quickly, use **Try sample report**.
+- If you only want to test the app quickly, use **View sample report**. It does not require `GEMINI_API_KEY`.
